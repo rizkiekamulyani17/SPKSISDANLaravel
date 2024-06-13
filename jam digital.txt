@@ -1,0 +1,23 @@
+<span><strong>{{ $saran->user->name }}</strong> <i>@</i>{{ $saran->user->username }} <strong>&#183;</strong> <span
+        id="time_{{ $saran->id }}"></span></span>
+
+<script>
+    setInterval(function () {
+        var timeElement = document.getElementById('time_{{ $saran->id }}');
+        var currentTime = new Date().getTime();
+        var saranTime = new Date('{{ $saran->created_at }}').getTime();
+        var timeDifference = currentTime - saranTime;
+        var timeElapsed = Math.floor(timeDifference / 1000);
+        var timeDisplay;
+        if (timeElapsed < 60) {
+            timeDisplay = timeElapsed + ' detik yang lalu';
+        } else if (timeElapsed < 3600) {
+            timeDisplay = Math.floor(timeElapsed / 60) + ' menit yang lalu';
+        } else if (timeElapsed < 86400) {
+            timeDisplay = Math.floor(timeElapsed / 3600) + ' jam yang lalu';
+        } else {
+            timeDisplay = Math.floor(timeElapsed / 86400) + ' days ago';
+        }
+        timeElement.innerText = timeDisplay;
+    }, 1000);
+</script>
