@@ -518,7 +518,7 @@
                                     ->orderBy('siswas.nama_siswa')
                                     ->get(['alternatives.*', 'siswas.*', 'criterias.*']);
                                 
-                              $bobots    = \App\Models\PriorityValue::where('criteria_id', $idCriteria)->get();
+                              //$bobots    = \App\Models\PriorityValue::where('criteria_id', $idCriteria)->get();
                                 //$innerpriorityvalue=$criteriaAnalysis->priorityValues;
                                 $minVal    = $nilais->min('alternative_value');
                                 $maxVal    = $nilais->max('alternative_value');
@@ -535,12 +535,14 @@
                                     
                                     if ($divider['kategori'] === 'BENEFIT' && $val != 0) {
                                         //$bobotValue = (($val/$maxVal)/$sumMaxVal)*$bobot->value;
-                                         $bobotValue =(($val/$maxVal)/$sumMaxVal)* $innerpriorityvalue->value ;
+                                        // $bobotValue =(($val/$maxVal)/$sumMaxVal)* $innerpriorityvalue->value ;
+                                        $bobotValue =(($val/$maxVal)/$sumMaxVal)* ($rowTotal/$criteria_analysis->priorityValues->count());
                                       
                                         $totalBobotEvaluasi += $bobotValue;
                                         $nilaiKriteria[$key] = $bobotValue;
                                     } elseif ($divider['kategori'] === 'COST' && $val != 0) {
-                                        $bobotValue = (($minVal/$val)/$sumMinVal)*$innerpriorityvalue->value;
+                                        //$bobotValue = (($minVal/$val)/$sumMinVal)*$innerpriorityvalue->value;
+                                        $bobotValue =(($minVal/$val)/$sumMinVal)* ($rowTotal/$criteria_analysis->priorityValues->count());
                                         
                                         
                                         $totalBobotEvaluasi += $bobotValue;

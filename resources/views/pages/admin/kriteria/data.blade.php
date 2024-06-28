@@ -61,7 +61,7 @@
                                 <th rowspan="2">No</th>
                                 <th rowspan="2">Nama Kriteria</th>
                                 <th rowspan="2">Kategori</th>
-                                <th colspan="6">Sub Kriteria</th>
+                                <th colspan="5">Sub Kriteria</th>
                                 @can('admin')
                                 <th rowspan="2">Aksi</th>
                                 @endcan
@@ -72,7 +72,7 @@
                                 <th>Skala 3</th>
                                 <th>Skala 4</th>
                                 <th>Skala 5</th>
-                                <th>Skala 6</th>
+                                <!-- <th>Skala 6</th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -82,7 +82,7 @@
                                 <td class="text-center bg-primary text-white">{{ $loop->iteration }}</td>
                                 <td class="text-center bg-warning">{{ $criteria->nama_kriteria }}</td>
                                 <td class="text-center bg-warning">{{ Str::ucfirst(Str::lower($criteria->kategori)) }}</td>
-                                <td class="text-center">{{ $criteria->skala1 }}</td>
+                                <!-- <td class="text-center">{{ $criteria->skala1 }}</td> -->
                                 <td class="text-center">{{ $criteria->skala2 }}</td>
                                 <td class="text-center">{{ $criteria->skala3 }}</td>
                                 <td class="text-center">{{ $criteria->skala4 }}</td>

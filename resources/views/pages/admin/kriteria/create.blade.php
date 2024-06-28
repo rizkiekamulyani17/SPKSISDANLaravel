@@ -86,7 +86,7 @@
                 </div>
                 @enderror
             </div>
-            <div class="mb-3">
+            <!-- <div class="mb-3">
                 <label for="skala6" class="form-label">Sub Kriteria Skala 6</label>
                 <input type="text" class="form-control @error('skala6') is-invalid @enderror" id="skala6"
                     name="skala6" value="{{ old('skala6') }}" autofocus required
@@ -96,7 +96,7 @@
                     {{ $message }}
                 </div>
                 @enderror
-            </div>
+            </div> -->
             <button type="submit" class="btn btn-primary mb-3">Simpan</button>
             <a href="{{ route('kriteria.index') }}" class="btn btn-danger mb-3">Cancel</a>
         </form>

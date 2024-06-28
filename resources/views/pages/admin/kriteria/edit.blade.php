@@ -36,7 +36,7 @@
                 </div>
                 @enderror
             </div>
-            <div class="mb-3">
+            <!-- <div class="mb-3">
                 <label for="skala1" class="form-label">Sub Kriteria Skala 1</label>
                 <input type="text" class="form-control @error('skala1') is-invalid @enderror" id="skala1"
                     name="skala1" value="{{ old('skala1', $criteria->skala1) }}" autofocus required>
@@ -45,9 +45,9 @@
                     {{ $message }}
                 </div>
                 @enderror
-            </div>
+            </div> -->
             <div class="mb-3">
-                <label for="skala2" class="form-label">Sub Kriteria Skala 2</label>
+                <label for="skala2" class="form-label">Sub Kriteria Skala 1</label>
                 <input type="text" class="form-control @error('skala2') is-invalid @enderror" id="skala2"
                     name="skala2" value="{{ old('skala2', $criteria->skala2) }}" autofocus required>
                 @error('skala2')
@@ -57,7 +57,7 @@
                 @enderror
             </div>
             <div class="mb-3">
-                <label for="skala3" class="form-label">Sub Kriteria Skala 3</label>
+                <label for="skala3" class="form-label">Sub Kriteria Skala 2</label>
                 <input type="text" class="form-control @error('skala3') is-invalid @enderror" id="skala3"
                     name="skala3" value="{{ old('skala3', $criteria->skala3) }}" autofocus required>
                 @error('skala3')
@@ -67,7 +67,7 @@
                 @enderror
             </div>
             <div class="mb-3">
-                <label for="skala4" class="form-label">Sub Kriteria Skala 4</label>
+                <label for="skala4" class="form-label">Sub Kriteria Skala 3</label>
                 <input type="text" class="form-control @error('skala4') is-invalid @enderror" id="skala4"
                     name="skala4" value="{{ old('skala4', $criteria->skala4) }}" autofocus required>
                 @error('skala4')
@@ -77,7 +77,7 @@
                 @enderror
             </div>
             <div class="mb-3">
-                <label for="skala5" class="form-label">Sub Kriteria Skala 5</label>
+                <label for="skala5" class="form-label">Sub Kriteria Skala 4</label>
                 <input type="text" class="form-control @error('skala5') is-invalid @enderror" id="skala5"
                     name="skala5" value="{{ old('skala5', $criteria->skala5) }}" autofocus required>
                 @error('skala5')
@@ -87,7 +87,7 @@
                 @enderror
             </div>
             <div class="mb-3">
-                <label for="skala6" class="form-label">Sub Kriteria Skala 6</label>
+                <label for="skala6" class="form-label">Sub Kriteria Skala 5</label>
                 <input type="text" class="form-control @error('skala6') is-invalid @enderror" id="skala5"
                     name="skala6" value="{{ old('skala6', $criteria->skala6) }}" autofocus required>
                 @error('skala6')

@@ -54,7 +54,7 @@
                                     </button>
                                 </div>
                                 <br>
-                                <a href="{{ url ('forgot-password')}}">Forgot Password?</a>
+                                <!-- <a href="{{ url ('forgot-password')}}">Forgot Password?</a> -->
                                 <p>Don't have an account? <a href="{{ route('register.index') }}">Register here</a></p>
                             </form>
                         </div>

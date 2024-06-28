@@ -5,18 +5,17 @@
         <div class="col-sm-6 col-md-12">
             <h1 class="mt-4">{{ $title }}</h1>
             <ol class="breadcrumb mb-4">
-                <li class="breadcrumb-item"><a href="{{ route('free.index') }}">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('free.perhitungan') }}">Metode SPK</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('kombinasi.awal') }}">Metode SPK</a></li>
                 <li class="breadcrumb-item active">{{ $title }}</li>
                 <li class="breadcrumb-item">
-                    <a href="{{ route('perhitungan.ahpDetail', $criteria_analysis->id) }}">
+                    <a href="{{ route('ahp.detail', $criteria_analysis->id) }}">
                         Detail Perhitungan AHP
                     </a>
                 </li>
             </ol>
         </div>
     </div>
-    {{-- Matriks Perbandingan dan Penjumlahan Kolom Kriteria --}}
     <div class="card mb-4">
         <div class="card-body table-responsive">
             <div class="d-sm-flex align-items-center">
@@ -70,7 +69,7 @@
             </table>
         </div>
     </div>
-    {{-- Matriks Normalisasi Kriteria dan Eigen Vector (EV) --}}
+    {{-- Normalisasi dan prioritas --}}
     <div class="card mb-4">
         <div class="card-body table-responsive">
             <div class="d-sm-flex align-items-center">
@@ -122,7 +121,7 @@
             </table>
         </div>
     </div>
-    {{-- Matriks Perkalian Setiap Elemen dengan Eigen Vector (EV) --}}
+    {{-- Matriks perkalian --}}
     <div class="card mb-4">
         <div class="card-body table-responsive">
             <div class="d-sm-flex align-items-center">
@@ -170,7 +169,7 @@
             </table>
         </div>
     </div>
-    {{-- Menentukan λmaks dan Rasio Konsistensi --}}
+    {{-- λ --}}
     <div class="card mb-4">
         <div class="card-body table-responsive">
             <div class="d-sm-flex align-items-center">
@@ -277,12 +276,12 @@
             </div>
         </div>
     </div>
-    {{-- Menentukan Eigen Vector Alternatif di Setiap Kriteria --}}
+    {{-- Menentukan Eigen Vector Alternatif di Setiap Alternatif --}}
     <div class="card mb-4">
         <div class="card-body table-responsive">
             <div class="d-sm-flex align-items-center">
                 <div class="mb-4">
-                    <h4 class="mb-0 text-gray-800">Menentukan Eigen Vector Alternatif di Setiap Kriteria</h4>
+                    <h4 class="mb-0 text-gray-800">Menentukan Eigen Vector Alternatif di Setiap Alternatif</h4>
                 </div>
             </div>
             <div>
@@ -347,6 +346,114 @@
             </div>
         </div>
     </div>
+
+
+
+    <!-- <div class="card mb-4">
+        <div class="card-body table-responsive">
+            <div class="d-sm-flex align-items-center">
+                <div class="mb-4">
+                    <h4 class="mb-0 text-gray-800">Normalisasi Alternatif</h4>
+                </div>
+            </div>
+           
+            <table id="datatablesSimple" class="table table-bordered">
+                <thead class="bg-primary align-middle text-center text-white">
+                    <tr>
+                        <th scope="col" class="text-center">Nama Alternatif</th>
+                        <th scope="col" class="text-center">Data Kelas</th>
+                        @foreach ($dividers as $divider)
+                            <th scope="col"> {{ $divider['nama_kriteria'] }}</th>
+                        @endforeach
+                        
+                        
+                    </tr>
+                </thead>
+                <tbody class="align-middle">
+                    <?php
+                    $siswas = \App\Models\Siswa::join('alternatives', 'siswas.id', '=', 'alternatives.siswa_id')
+                        ->join('criterias', 'alternatives.criteria_id', '=', 'criterias.id')
+                        ->join('kelas', 'siswas.kelas_id', '=', 'kelas.id')
+                        ->where('alternatives.criteria_id', $criteriaId)
+                        ->whereIn('alternatives.siswa_id', $alternatives->pluck('siswa_id')->toArray())
+                        ->orderBy('siswas.nama_siswa')
+                        ->get(['alternatives.*', 'siswas.*', 'criterias.*', 'kelas.*']);
+                    ?>
+                    @if (!empty($normalizations))
+                        <?php
+                        $nilaiBobotEvaluasi = [];
+                        foreach ($normalizations as $normalisasi) {
+                            //$totalBobotEvaluasi = 0;
+                            $nilaiKriteria = [];
+                            foreach ($dividers as $key => $divider) {
+                                $idCriteria = $divider['criteria_id'];
+                                $nilais = \App\Models\Siswa::join('alternatives', 'siswas.id', '=', 'alternatives.siswa_id')
+                                    ->join('criterias', 'alternatives.criteria_id', '=', 'criterias.id')
+                                    ->where('alternatives.criteria_id', $idCriteria)
+                                    ->whereIn('alternatives.siswa_id', $alternatives->pluck('siswa_id')->toArray())
+                                    ->orderBy('siswas.nama_siswa')
+                                    ->get(['alternatives.*', 'siswas.*', 'criterias.*']);
+            
+                                $bobots    = \App\Models\PriorityValue::where('criteria_id', $idCriteria)->get();
+                                $minVal    = $nilais->min('alternative_value');
+                                $maxVal    = $nilais->max('alternative_value');
+                                $sumMinVal = 0;
+                                $sumMaxVal = 0;
+            
+                                foreach($nilais as $nilai) {
+                                    $sumMinVal += $minVal/$nilai->alternative_value;
+                                    $sumMaxVal += $nilai->alternative_value/$maxVal;
+                                }
+                                $val = isset($normalisasi['alternative_val'][$key]) ? $normalisasi['alternative_val'][$key] : null;
+                                $totalResult = 0;
+                                foreach ($bobots as $bobot) {
+                                    if ($divider['kategori'] === 'BENEFIT' && $val != 0) {
+                                        //$bobotValue = (($val/$maxVal)/$sumMaxVal)*$bobot->value;
+                                        $bobotValue = (($val/$maxVal)/$sumMaxVal);
+                                        //$totalBobotEvaluasi  = $bobotValue ;
+                                        $nilaiKriteria[$key] = $bobotValue;
+                                    } elseif ($divider['kategori'] === 'COST' && $val != 0) {
+                                        //$bobotValue = (($minVal/$val)/$sumMinVal)*$bobot->value;
+                                        $bobotValue = (($minVal/$val)/$sumMinVal);
+                                        //$bobotValue = (($minVal/$val)/$sumMinVal);
+                                        //$totalBobotEvaluasi = $bobotValue ;
+                                        $nilaiKriteria[$key] = $bobotValue;
+                                    }
+                                }
+                            }
+                            $nilaiBobotEvaluasi[$normalisasi['siswa_name']] = [
+                                //'total_bobot'    => $totalBobotEvaluasi,
+                                'nilai_kriteria' => $nilaiKriteria,
+                                'kelas_name'     => $normalisasi['kelas_name'],
+                            ];
+                        }
+                        // arsort($nilaiBobotEvaluasi);
+                        // ?>
+                        
+                        @foreach ($nilaiBobotEvaluasi as $siswaName => $data)
+                            <tr>
+                                <td class="text-center">
+                                    {{ $siswaName }}
+                                </td>
+                                <td class="text-center">
+                                    {{ $data['kelas_name'] }}
+                                </td>
+                                @foreach ($dividers as $key => $divider)
+                                    <td class="text-center">
+                                        {{ round($data['nilai_kriteria'][$key], 3) }}
+                                    </td>
+                                @endforeach
+                                
+                                
+                            </tr>
+                        @endforeach
+                    @endif
+                </tbody>
+            </table>            
+        </div>
+    </div> -->
+    
+
     {{-- Ranking --}}
     <div class="card mb-4">
         <div class="card-body table-responsive">
@@ -411,7 +518,7 @@
                                     ->orderBy('siswas.nama_siswa')
                                     ->get(['alternatives.*', 'siswas.*', 'criterias.*']);
                                 
-                              $bobots    = \App\Models\PriorityValue::where('criteria_id', $idCriteria)->get();
+                              //$bobots    = \App\Models\PriorityValue::where('criteria_id', $idCriteria)->get();
                                 //$innerpriorityvalue=$criteriaAnalysis->priorityValues;
                                 $minVal    = $nilais->min('alternative_value');
                                 $maxVal    = $nilais->max('alternative_value');
@@ -428,13 +535,15 @@
                                     
                                     if ($divider['kategori'] === 'BENEFIT' && $val != 0) {
                                         //$bobotValue = (($val/$maxVal)/$sumMaxVal)*$bobot->value;
-                                         $bobotValue =(($val/$maxVal)/$sumMaxVal)* $innerpriorityvalue->value ;
+                                        // $bobotValue =(($val/$maxVal)/$sumMaxVal)* $innerpriorityvalue->value ;
+                                        $bobotValue =(($val/$maxVal)/$sumMaxVal)* ($rowTotal/$criteria_analysis->priorityValues->count());
                                       
                                         $totalBobotEvaluasi += $bobotValue;
                                         $nilaiKriteria[$key] = $bobotValue;
                                     } elseif ($divider['kategori'] === 'COST' && $val != 0) {
-                                        $bobotValue = (($minVal/$val)/$sumMinVal)*$innerpriorityvalue->value;
-                                        //$bobotValue = (($val/$maxVal)/$sumMaxVal)*$bobot->value;
+                                        //$bobotValue = (($minVal/$val)/$sumMinVal)*$innerpriorityvalue->value;
+                                        $bobotValue =(($minVal/$val)/$sumMinVal)* ($rowTotal/$criteria_analysis->priorityValues->count());
+                                        
                                         
                                         $totalBobotEvaluasi += $bobotValue;
                                         $nilaiKriteria[$key] = $bobotValue;
@@ -473,9 +582,6 @@
         </div>
     </div>
 </div>
-
-
-
       
     
 
